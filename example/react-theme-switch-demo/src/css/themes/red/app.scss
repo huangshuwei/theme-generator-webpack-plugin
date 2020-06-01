@@ -1,0 +1,43 @@
+// Color Palette
+$primary-color: #f5222d;
+$black: #000;
+$white: #fff;
+$gray-1: #f7f8fa;
+$gray-2: #f2f3f5;
+$gray-3: #ebedf0;
+$gray-4: #dcdee0;
+$gray-5: #c8c9cc;
+$gray-6: #969799;
+$gray-7: #646566;
+$gray-8: #434343;
+$gray-9: #323233;
+$gray-10: #262626;
+$gray-11: #1f1f1f;
+$gray-12: #141414;
+$red: #ee0a24;
+$blue: #1989fa;
+$orange: #ff976a;
+$orange-dark: #ed6a0c;
+$orange-light: #fffbe8;
+$green: #07c160;
+
+// text color
+$app-text-color: $gray-12;
+// button color
+$app-button-background-color: $primary-color;
+// input color
+$app-input-background-color: $gray-3;
+// border corlor
+$app-border-color: $gray-3;
+
+// background colors
+$page-background-color: $white;
+$content-background-color1: $white;
+
+// home view
+$home-top-bar-title-color: $primary-color;
+$content-item-block-color: $primary-color;
+
+// import app styles
+@import "../../../index.scss";
+@import "../../../views/home/index.scss";

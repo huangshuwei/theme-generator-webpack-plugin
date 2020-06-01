@@ -1,0 +1,91 @@
+.home {
+    background: $content-background-color1;
+
+    .home-top-bar {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        height: 100px;
+        width: 100%;
+        color: $app-text-color;
+
+        .left {
+            margin-left: 50px;
+            font-size: 30px;
+            color: $home-top-bar-title-color;
+        }
+
+        .right {
+            margin-right: 50px;
+            display: flex;
+
+            .tool {
+                display: flex;
+                .color-item {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 20px;
+                    height: 20px;
+                    margin-right: 8px;
+                    font-weight: 700;
+                    text-align: center;
+                    border-radius: 2px;
+                    cursor: pointer;
+                }
+
+                .color-item .icon-check {
+                    color: #fff;
+                }
+
+                .theme-orange {
+                    background-color: #ed6a0c;
+                }
+                .theme-black {
+                    background-color: #000;
+                }
+                .theme-blue {
+                    background-color: #1989fa;
+                }
+                .theme-red {
+                    background-color: #f5222d;
+                }
+            }
+            .link-info {
+                display: flex;
+                margin-left: 100px;
+                .iconfont:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .home-content {
+        .content-item {
+            margin-bottom: 10px;
+            .content-item-block {
+                display: flex;
+                flex-direction: row;
+                height: 40px;
+                align-items: center;
+                color: $app-text-color;
+                margin-bottom: 10px;
+
+                .icon {
+                    display: inline-flex;
+                    width: 3px;
+                    height: 31px;
+                    margin-right: 6px;
+                    border-radius: 3px;
+                    background-color: $content-item-block-color;
+                }
+                .title {
+                    font-size: 20px;
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,82 @@
+@import "~antd/lib/style/themes/default.less";
+@import "~antd/dist/antd.less";
+
+// Color Palette
+@primary-color: #000;
+@black: #000;
+@white: #fff;
+@gray-1: #f7f8fa;
+@gray-2: #f2f3f5;
+@gray-3: #ebedf0;
+@gray-4: #dcdee0;
+@gray-5: #c8c9cc;
+@gray-6: #969799;
+@gray-7: #646566;
+@gray-8: #434343;
+@gray-9: #323233;
+@gray-10: #262626;
+@gray-11: #1f1f1f;
+@gray-12: #141414;
+@red: #ee0a24;
+@blue: #1989fa;
+@orange: #ff976a;
+@orange-dark: #ed6a0c;
+@orange-light: #fffbe8;
+@green: #07c160;
+
+// ant.design main color
+@link-color: #1890ff; // 链接色
+@success-color: #52c41a; // 成功色
+@warning-color: #faad14; // 警告色
+@error-color: #f5222d; // 错误色
+@font-size-base: 14px; // 主字号
+@heading-color: rgba(0, 0, 0, 0.85); // 标题色
+@text-color: @gray-4; // 主文本色
+@text-color-secondary: @gray-6; // 次文本色
+@disabled-color: rgba(0, 0, 0, 0.25); // 失效色
+@border-radius-base: 4px; // 组件/浮层圆角
+@border-color-base: @gray-8; // 边框色
+@box-shadow-base: 0 2px 8px rgba(0, 0, 0, 0.15); // 浮层阴影
+
+// Table
+// --
+@table-bg: @gray-10;
+@table-header-bg: @gray-12;
+@table-header-color: @gray-6;
+@table-body-sort-bg: #fafafa;
+@table-row-hover-bg: @gray-12;
+@table-selected-row-color: @gray-5;
+@table-selected-row-bg: @gray-12;
+@table-selected-row-hover-bg: @gray-12;
+@table-expanded-row-bg: #fbfbfb;
+@table-footer-color: @gray-12;
+.ant-table {
+    tr > td,
+    tr > th {
+        border-color: @gray-8;
+    }
+}
+
+// Checkbox
+@checkbox-color: @blue;
+@checkbox-check-color: @gray-4;
+@checkbox-check-bg: @blue;
+
+// Radio
+@radio-dot-color: @blue;
+
+// Buttons
+@btn-primary-bg: @blue;
+
+// Collapse
+@collapse-header-bg: @gray-10;
+@collapse-content-bg: @gray-12;
+.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    color: @text-color;
+}
+
+// Menu
+@dropdown-menu-bg: @gray-9;
+.ant-dropdown-menu-item > a:hover {
+    background-color: @gray-9;
+}
