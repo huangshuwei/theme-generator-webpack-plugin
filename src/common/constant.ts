@@ -1,17 +1,4 @@
-import { existsSync } from "fs-extra";
-import { join, dirname } from "path";
-
-function findRootDir(dir: string): string {
-    if (dir === "/") {
-        return "/";
-    }
-
-    if (existsSync(join(dir, THEMES_CONFIG))) {
-        return dir;
-    }
-
-    return findRootDir(dirname(dir));
-}
+import { join } from "path";
 
 // env
 export const ENV_DEVELOPMENT = "development";
@@ -28,12 +15,8 @@ export const THEME_SWITCH_CLI_SCRIPT_ID = "theme_creator_cli_script_id";
 
 // Root paths
 export const CWD = process.cwd();
-export const ROOT_PATH = findRootDir(CWD);
-export const THEMES_CONFIG_PATH = join(ROOT_PATH, THEMES_CONFIG);
 export const THEMES_DB_PATH = join(__dirname, "../../db/themes.db.json");
 export const DIST_PATH = join(__dirname, "../../dist");
-// vue、react 默认的输出目录 /public/themes
-export const OUTPUT_FOLDER_PATH = join(ROOT_PATH, "public");
 
 // themes config names
 export const CONFIG_THEMES = "themes";
