@@ -31,7 +31,7 @@ const themes = [
     },
 ];
 
-const themeList = window.theme_creator_cli_themeVars.map((item) => {
+const themeList = window.generator_webpack_plugin_theme_vars.map((item) => {
     return {
         themeName: item.key,
         themePath: item.themePath,
