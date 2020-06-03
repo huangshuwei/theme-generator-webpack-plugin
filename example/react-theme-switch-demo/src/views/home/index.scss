@@ -1,6 +1,8 @@
+@import "./test.css";
+
 .home {
     background: $content-background-color1;
-
+    
     .home-top-bar {
         display: flex;
         flex-direction: row;

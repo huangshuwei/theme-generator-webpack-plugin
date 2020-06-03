@@ -14,9 +14,13 @@ export async function optimizationCss(source: string) {
         postcssMergeRules
     ];
 
-    const { css } = await postcss(postcssPlugins).process(source, {
-        from: undefined
-    });
-    // 生产模式自动压缩
-    return await (isProductionEnv() ? uglifycss.processString(css) : css);
+    if (isProductionEnv()) {
+        const { css } = await postcss(postcssPlugins).process(source, {
+            from: undefined
+        });
+        // 生产模式自动压缩
+        return await uglifycss.processString(css);
+    } else {
+        return source;
+    }
 }

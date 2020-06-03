@@ -1,4 +1,5 @@
 import { getCompiledCss } from "./common/get-compiled-css";
+import { getDependenciesFilePath, clearDependenciesCache } from "./common/get-dependencies";
 
 interface ThemeItem {
     themeName: string;
@@ -13,8 +14,6 @@ interface Option {
     htmlLinkId?: string;
     hash?: boolean;
 }
-
-const PLUGIN_NAME = "ThemeGeneratorWebpackPlugin";
 
 class ThemeGeneratorWebpackPlugin {
     option: Option;
@@ -36,9 +35,13 @@ class ThemeGeneratorWebpackPlugin {
     apply(compiler: any) {
         const option = this.option;
 
+        process.env.NODE_ENV = compiler.options.mode;
+
+        //console.log("compiler.options::", compiler.options);
+
         // emit hook
         compiler.hooks.emit.tapAsync(
-            PLUGIN_NAME,
+            "compilerStylePlugin",
             (compilation: any, callback: any) => {
                 console.log("compile theme file start");
                 console.time("compile theme file");
@@ -58,45 +61,75 @@ class ThemeGeneratorWebpackPlugin {
         );
 
         // make hook
-        compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation: any) => {
-            // Hook into the html-webpack-plugin processing and add the html
-            const HtmlWebpackPlugin = compiler.options.plugins
-                .map((plugin: any) => plugin.constructor)
-                .find(
-                    (constructor: any) =>
-                        constructor && constructor.name === "HtmlWebpackPlugin"
-                );
+        compiler.hooks.compilation.tap(
+            "InsertHtmlTagPlugin",
+            (compilation: any) => {
+                // Hook into the html-webpack-plugin processing and add the html
+                const HtmlWebpackPlugin = compiler.options.plugins
+                    .map((plugin: any) => plugin.constructor)
+                    .find(
+                        (constructor: any) =>
+                            constructor &&
+                            constructor.name === "HtmlWebpackPlugin"
+                    );
 
-            if (HtmlWebpackPlugin) {
-                HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync(
-                    PLUGIN_NAME,
-                    (htmlPluginData: any, htmlWebpackPluginCallback: any) => {
-                        htmlPluginData.html = htmlPluginData.html.replace(
-                            /(?=<\/head>)/,
-                            () => {
-                                return getLink(option) + getScript(option);
-                            }
-                        );
-                        htmlWebpackPluginCallback(null, htmlPluginData);
-                    }
-                );
-            } else {
-                throw new Error(
-                    "Please ensure that `html-webpack-plugin` was used."
-                );
+                if (HtmlWebpackPlugin) {
+                    HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync(
+                        "HtmlWebpackBeforEmitPlugin",
+                        (
+                            htmlPluginData: any,
+                            htmlWebpackPluginCallback: any
+                        ) => {
+                            htmlPluginData.html = htmlPluginData.html.replace(
+                                /(?=<\/head>)/,
+                                () => {
+                                    return getLink(option) + getScript(option);
+                                }
+                            );
+                            htmlWebpackPluginCallback(null, htmlPluginData);
+                        }
+                    );
+                } else {
+                    throw new Error(
+                        "Please ensure that `html-webpack-plugin` was used."
+                    );
+                }
             }
-        });
+        );
 
+        // watchRun hook
+        compiler.hooks.watchRun.tapAsync(
+            "ReCompileStylePlugin",
+            (compiler: any, callback: any) => {
+                let filesChange = compiler.watchFileSystem.watcher.mtimes;
+
+                console.log("filesChange::", JSON.stringify(filesChange));
+
+                callback();
+            }
+        );
+
+        // afterCompile hook
         compiler.hooks.afterCompile.tapAsync(
-            PLUGIN_NAME,
+            "AddDependenciesFilePlugin",
             (compilation: any, callback: any) => {
                 // 把 HTML 文件添加到文件依赖列表，好让 Webpack 去监听 HTML 模块文件，在 HTML 模版文件发生变化时重新启动一次编译
                 const option = this.option;
+
+                // clear dependencies cache
+                clearDependenciesCache();
 
                 let filePaths: Array<string> = [];
                 option.themes.forEach((themeItem: ThemeItem) => {
                     filePaths = filePaths.concat(themeItem.themeFiles);
                 });
+
+                filePaths.forEach((path: string) => {
+                    const depsFilePaths = getDependenciesFilePath(path);
+                    filePaths = filePaths.concat(depsFilePaths);
+                });
+
+                filePaths = [...new Set(filePaths)];
 
                 //compilation.fileDependencies.addAll(new Set(filePaths));
                 filePaths.forEach((path: string) => {
@@ -124,8 +157,6 @@ function getLink(option: Option): string {
 
 // return script tag
 function getScript(option: Option): string {
-    let script = "";
-
     const themes = option.themes.map((themeItem: ThemeItem) => {
         return {
             key: themeItem.themeName,
