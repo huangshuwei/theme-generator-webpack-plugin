@@ -530,6 +530,32 @@ module.exports = function(webpackEnv) {
             ]
         },
         plugins: [
+            // Generates an `index.html` file with the <script> injected.
+            new HtmlWebpackPlugin(
+                Object.assign(
+                    {},
+                    {
+                        inject: true,
+                        template: paths.appHtml
+                    },
+                    isEnvProduction
+                        ? {
+                              minify: {
+                                  removeComments: true,
+                                  collapseWhitespace: true,
+                                  removeRedundantAttributes: true,
+                                  useShortDoctype: true,
+                                  removeEmptyAttributes: true,
+                                  removeStyleLinkTypeAttributes: true,
+                                  keepClosingSlash: true,
+                                  minifyJS: true,
+                                  minifyCSS: true,
+                                  minifyURLs: true
+                              }
+                          }
+                        : undefined
+                )
+            ),
             // themeGeneratorWebpackPlugin
             new themeGeneratorWebpackPlugin({
                 themes: [
@@ -575,37 +601,10 @@ module.exports = function(webpackEnv) {
                 // themes output folder name [string].Will be created in the public directory
                 outputFolderName: "themes",
                 // those html file will effect [Array<string>]
-                htmlFiles: [path.resolve("../../../public/index.html")],
+                htmlFileNames: ["index.html"],
                 // html link id  [string]。default link id is "theme_creator_cli_style_id"
                 htmlLinkId: "theme_creator_cli_style_id"
             }),
-
-            // Generates an `index.html` file with the <script> injected.
-            new HtmlWebpackPlugin(
-                Object.assign(
-                    {},
-                    {
-                        inject: true,
-                        template: paths.appHtml
-                    },
-                    isEnvProduction
-                        ? {
-                              minify: {
-                                  removeComments: true,
-                                  collapseWhitespace: true,
-                                  removeRedundantAttributes: true,
-                                  useShortDoctype: true,
-                                  removeEmptyAttributes: true,
-                                  removeStyleLinkTypeAttributes: true,
-                                  keepClosingSlash: true,
-                                  minifyJS: true,
-                                  minifyCSS: true,
-                                  minifyURLs: true
-                              }
-                          }
-                        : undefined
-                )
-            ),
             // Inlines the webpack runtime script. This script is too small to warrant
             // a network request.
             // https://github.com/facebook/create-react-app/issues/5358

@@ -3,8 +3,8 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "concurrently \"theme-creator-cli dev\" \"node scripts/start.js\"",
-        "dev2": "node scripts/start.js",
+        "dev": "node scripts/start.js",
+        "dev2": "concurrently \"theme-creator-cli dev\" \"node scripts/start.js\"",
         "theme:dev": "theme-creator-cli dev",
         "theme:build": "theme-creator-cli build",
         "build": "node scripts/build.js",

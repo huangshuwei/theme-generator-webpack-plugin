@@ -1,5 +1,8 @@
 import { getCompiledCss } from "./common/get-compiled-css";
-import { getDependenciesFilePath, clearDependenciesCache } from "./common/get-dependencies";
+import {
+    getDependenciesFilePath,
+    clearDependenciesCache
+} from "./common/get-dependencies";
 
 interface ThemeItem {
     themeName: string;
@@ -9,7 +12,7 @@ interface ThemeItem {
 interface Option {
     themes: Array<ThemeItem>;
     defaultTheme: string;
-    htmlFiles: Array<string>;
+    htmlFileNames: Array<string>;
     outputFolderName?: string;
     htmlLinkId?: string;
     hash?: boolean;
@@ -23,7 +26,7 @@ class ThemeGeneratorWebpackPlugin {
         const defaultOpts = {
             themes: [],
             defaultTheme: "",
-            htmlFiles: [],
+            htmlFileNames: [],
             outputFolderName: "themes",
             htmlLinkId: "theme_generator_webpack_plugin_style_id",
             hash: false
@@ -39,8 +42,8 @@ class ThemeGeneratorWebpackPlugin {
 
         //console.log("compiler.options::", compiler.options);
 
-        // emit hook
-        compiler.hooks.emit.tapAsync(
+        // make hook
+        compiler.hooks.make.tapAsync(
             "compilerStylePlugin",
             (compilation: any, callback: any) => {
                 console.log("compile theme file start");
@@ -55,43 +58,53 @@ class ThemeGeneratorWebpackPlugin {
                         };
                     });
                     console.timeEnd("compile theme file");
+
                     callback();
                 });
             }
         );
 
-        // make hook
-        compiler.hooks.compilation.tap(
-            "InsertHtmlTagPlugin",
-            (compilation: any) => {
-                // Hook into the html-webpack-plugin processing and add the html
-                const HtmlWebpackPlugin = compiler.options.plugins
-                    .map((plugin: any) => plugin.constructor)
-                    .find(
-                        (constructor: any) =>
-                            constructor &&
-                            constructor.name === "HtmlWebpackPlugin"
-                    );
+        // compilation hook
+        compiler.hooks.emit.tapAsync(
+            "InsertHtmlContentPlugin",
+            (compilation: any, callback: any) => {
+                console.log("InsertHtmlContentPlugin coming");
 
-                if (HtmlWebpackPlugin) {
-                    HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync(
-                        "HtmlWebpackBeforEmitPlugin",
-                        (
-                            htmlPluginData: any,
-                            htmlWebpackPluginCallback: any
-                        ) => {
-                            htmlPluginData.html = htmlPluginData.html.replace(
-                                /(?=<\/head>)/,
-                                () => {
-                                    return getLink(option) + getScript(option);
-                                }
+                const { htmlFileNames } = this.option;
+
+                if (htmlFileNames.length > 0) {
+                    htmlFileNames.forEach(htmlFileName => {
+                        if (
+                            Object.keys(compilation.assets).includes(
+                                htmlFileName
+                            )
+                        ) {
+                            const index = compilation.assets[htmlFileName];
+                            let content = index.source();
+
+                            const insertHtmlContent =
+                                getLink(option) + getScript(option);
+
+                            index.source = () => {
+                                return content
+                                    .replace(insertHtmlContent, "")
+                                    .replace(
+                                        /<body>/gi,
+                                        `<body>${insertHtmlContent}`
+                                    );
+                            };
+                            index.size = () => index.source().length;
+                        } else {
+                            throw new Error(
+                                `Please ensure '${htmlFileName}' file exists.`
                             );
-                            htmlWebpackPluginCallback(null, htmlPluginData);
                         }
-                    );
+                    });
+
+                    callback();
                 } else {
                     throw new Error(
-                        "Please ensure that `html-webpack-plugin` was used."
+                        "Please ensure 'htmlFileNames' option is required."
                     );
                 }
             }
@@ -149,7 +162,11 @@ function getLink(option: Option): string {
     let link = "";
 
     if (option.defaultTheme) {
-        link = `<link id="${option.htmlLinkId}" rel="stylesheet" type="text/css" href="${option.defaultTheme}.css" />`;
+        link = `<link id="${
+            option.htmlLinkId
+        }" rel="stylesheet" type="text/css" href="${
+            option.defaultTheme
+        }.css?v=${new Date().getTime()}" />`;
     }
 
     return link;
