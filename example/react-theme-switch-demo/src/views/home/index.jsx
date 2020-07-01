@@ -96,9 +96,9 @@ export default class Home extends React.Component {
                     <a
                         target="_blank"
                         rel="noopener noreferrer"
-                        href="https://github.com/huangshuwei/theme-creator-cli"
+                        href="https://github.com/huangshuwei/theme-generator-webpack-plugin"
                     >
-                        theme-creator-cli
+                        theme-generator-webpack-plugin
                     </a>
                 </Menu.Item>
                 <Menu.Item>
