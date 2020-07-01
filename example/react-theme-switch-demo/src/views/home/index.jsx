@@ -31,6 +31,7 @@ const themes = [
     }
 ];
 
+// get theme list by theme-generator-webpack-plugin
 const themeList = window.generator_webpack_plugin_theme_vars.map(item => {
     return {
         themeName: item.key,
@@ -38,6 +39,7 @@ const themeList = window.generator_webpack_plugin_theme_vars.map(item => {
     };
 });
 
+// init theme-switcher-tool
 const themeSwitcherTool = SwitcherThemeTool({
     themeList: themeList,
     styleLinkId: "theme_creator_cli_style_id",
@@ -116,9 +118,7 @@ export default class Home extends React.Component {
         return (
             <div className="home">
                 <div className="home-top-bar">
-                    <div className="left">
-                        theme-creator-cli React Ant.Design UI Example
-                    </div>
+                    <div className="left">React Ant.Design UI Example</div>
                     <div className="right">
                         <div className="tool">
                             {this.state.themes.map((theme, index) => {

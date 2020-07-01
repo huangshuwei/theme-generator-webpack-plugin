@@ -6,6 +6,9 @@
     "scripts": {
         "dev": "tsc --watch"
     },
+    "files": [
+        "lib"
+    ],
     "keywords": [
         "theme",
         "generator",
