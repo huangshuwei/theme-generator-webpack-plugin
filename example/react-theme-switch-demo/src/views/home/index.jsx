@@ -9,32 +9,32 @@ import Collapse from "./collapse";
 import SwitcherThemeTool from "theme-switcher-tool";
 import {
     addGithubComment,
-    setGithubCommentTheme,
+    setGithubCommentTheme
 } from "../../utils/github-comment";
 
 const themes = [
     {
         themeName: "theme-black",
-        selected: false,
+        selected: false
     },
     {
         themeName: "theme-blue",
-        selected: false,
+        selected: false
     },
     {
         themeName: "theme-orange",
-        selected: false,
+        selected: false
     },
     {
         themeName: "theme-red",
-        selected: false,
-    },
+        selected: false
+    }
 ];
 
-const themeList = window.generator_webpack_plugin_theme_vars.map((item) => {
+const themeList = window.generator_webpack_plugin_theme_vars.map(item => {
     return {
         themeName: item.key,
-        themePath: item.themePath,
+        themePath: item.themePath
     };
 });
 
@@ -42,12 +42,12 @@ const themeSwitcherTool = SwitcherThemeTool({
     themeList: themeList,
     styleLinkId: "theme_creator_cli_style_id",
     useStorage: true,
-    storageKey: "theme_switcher_tool_theme",
+    storageKey: "theme_switcher_tool_theme"
 });
 
 export default class Home extends React.Component {
     state = {
-        themes: themes,
+        themes: themes
     };
 
     componentDidMount() {
@@ -64,10 +64,10 @@ export default class Home extends React.Component {
     // change theme
     changeTheme(themeName) {
         this.setState({
-            themes: this.state.themes.slice().map((item) => {
+            themes: this.state.themes.slice().map(item => {
                 item.selected = themeName === item.themeName;
                 return item;
-            }),
+            })
         });
 
         // loading
@@ -75,7 +75,7 @@ export default class Home extends React.Component {
 
         themeSwitcherTool
             .switcher({
-                themeName: themeName,
+                themeName: themeName
             })
             .then(() => {
                 // hide loading
