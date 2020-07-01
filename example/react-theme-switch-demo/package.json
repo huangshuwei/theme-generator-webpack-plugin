@@ -4,9 +4,6 @@
     "private": true,
     "scripts": {
         "dev": "node scripts/start.js",
-        "dev2": "concurrently \"theme-creator-cli dev\" \"node scripts/start.js\"",
-        "theme:dev": "theme-creator-cli dev",
-        "theme:build": "theme-creator-cli build",
         "build": "node scripts/build.js",
         "test": "node scripts/test.js"
     },

@@ -72,9 +72,9 @@ const themeList = window.generator_webpack_plugin_theme_vars.map(item => {
 // init theme-switcher-tool
 const themeSwitcherTool = SwitcherThemeTool({
     themeList: themeList,
-    styleLinkId: "theme_creator_cli_style_id",
+    styleLinkId: "theme-generator-webpack-plugin_style_id",
     useStorage: true,
-    storageKey: "theme_switcher_tool_theme"
+    storageKey: "theme-generator-webpack-plugin_theme"
 });
 
 export default {

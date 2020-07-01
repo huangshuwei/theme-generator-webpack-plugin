@@ -146,10 +146,25 @@ class ThemeGeneratorWebpackPlugin {
 
                 //compilation.fileDependencies.addAll(new Set(filePaths));
                 filePaths.forEach((path: string) => {
+                    // recompile
                     if (!compilation.fileDependencies.has(path)) {
                         compilation.fileDependencies.add(path);
                     }
+
+                    // hot reload
+                    /* if (!compilation.contextDependencies.has(path)){
+                        compilation.contextDependencies.add(path);
+                    } */
+                    compilation.contextDependencies.add(path);
                 });
+
+               /*  const basename = path.basename(filename);
+                compilation.assets[basename] = {
+                    source: () => results.source,
+                    size: () => results.size.size
+                  }; */
+
+                console.log("compilation.contextDependencies::",compilation.contextDependencies)
 
                 callback();
             }
