@@ -27,7 +27,9 @@ const typescriptFormatter = require("react-dev-utils/typescriptFormatter");
 
 const postcssNormalize = require("postcss-normalize");
 
-const themeGeneratorWebpackPlugin = require("../package/lib/index");
+/* const themeGeneratorWebpackPlugin = require("../package/lib/index"); */
+/* const themeGeneratorWebpackPlugin = require("../../../lib/index"); */
+const themeGeneratorWebpackPlugin = require("theme-generator-webpack-plugin");
 
 const appPackageJson = require(paths.appPackageJson);
 

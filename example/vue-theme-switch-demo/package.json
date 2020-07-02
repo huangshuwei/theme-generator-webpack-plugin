@@ -10,7 +10,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "element-ui": "^2.13.2",
-    "theme-generator-webpack-plugin": "^0.1.0",
+    "theme-generator-webpack-plugin": "^0.2.0",
     "theme-switcher-tool": "^1.0.0",
     "vue": "^2.6.11"
   },

@@ -58,7 +58,7 @@ class ThemeGeneratorWebpackPlugin {
                         };
                     });
                     console.timeEnd("compile theme file");
-
+                    console.log(1111111);
                     callback();
                 });
             }
@@ -79,21 +79,33 @@ class ThemeGeneratorWebpackPlugin {
                                 htmlFileName
                             )
                         ) {
-                            const index = compilation.assets[htmlFileName];
+                            let index = compilation.assets[htmlFileName];
                             let content = index.source();
 
                             const insertHtmlContent =
                                 getLink(option) + getScript(option);
 
                             index.source = () => {
-                                return content
+                                /* return content
                                     .replace(insertHtmlContent, "")
                                     .replace(
                                         /<body>/gi,
                                         `<body>${insertHtmlContent}`
+                                    ); */
+                                return content
+                                    .replace(insertHtmlContent, "")
+                                    .replace(
+                                        /<body>/gi,
+                                        `<body>
+                                        <link
+                                        rel="stylesheet"
+                                        type="text/css"
+                                        href="./test.css"
+                                    />`
                                     );
                             };
-                            index.size = () => index.source().length;
+                            index.size = () => content.length;
+                            compilation.assets[htmlFileName] = index;
                         } else {
                             throw new Error(
                                 `Please ensure '${htmlFileName}' file exists.`
@@ -101,12 +113,14 @@ class ThemeGeneratorWebpackPlugin {
                         }
                     });
 
-                    callback();
+                    /* callback(); */
                 } else {
                     throw new Error(
                         "Please ensure 'htmlFileNames' option is required."
                     );
                 }
+                console.log(2222222);
+                callback();
             }
         );
 
@@ -158,13 +172,11 @@ class ThemeGeneratorWebpackPlugin {
                     compilation.contextDependencies.add(path);
                 });
 
-               /*  const basename = path.basename(filename);
+                /*  const basename = path.basename(filename);
                 compilation.assets[basename] = {
                     source: () => results.source,
                     size: () => results.size.size
                   }; */
-
-                console.log("compilation.contextDependencies::",compilation.contextDependencies)
 
                 callback();
             }
@@ -179,7 +191,7 @@ function getLink(option: Option): string {
     if (option.defaultTheme) {
         link = `<link id="${
             option.htmlLinkId
-        }" rel="stylesheet" type="text/css" href="${
+        }" rel="stylesheet" type="text/css" href="./${
             option.defaultTheme
         }.css?v=${new Date().getTime()}" />`;
     }

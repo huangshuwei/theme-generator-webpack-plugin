@@ -1,7 +1,7 @@
 <template>
     <div class="home">
         <div class="home-top-bar">
-            <div class="left">Vue Element UI Example</div>
+            <div class="left">Vue Element UI Example2</div>
             <div class="right">
                 <div class="tool">
                     <span
@@ -58,24 +58,24 @@
 </template>
 <script>
 import SwitcherThemeTool from "theme-switcher-tool";
-import "./index.scss";
+/* import "./index.scss"; */
 import Table from "./table";
 
 // get theme list by theme-generator-webpack-plugin
-const themeList = window.generator_webpack_plugin_theme_vars.map(item => {
+/* const themeList = window.generator_webpack_plugin_theme_vars.map(item => {
     return {
         themeName: item.key,
         themePath: item.themePath
     };
-});
+}); */
 
 // init theme-switcher-tool
-const themeSwitcherTool = SwitcherThemeTool({
+/* const themeSwitcherTool = SwitcherThemeTool({
     themeList: themeList,
     styleLinkId: "theme-generator-webpack-plugin_style_id",
     useStorage: true,
     storageKey: "theme-generator-webpack-plugin_theme"
-});
+}); */
 
 export default {
     components: { Table },
