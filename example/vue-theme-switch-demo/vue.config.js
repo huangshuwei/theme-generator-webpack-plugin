@@ -1,54 +1,78 @@
 // vue.config.js
 const path = require("path");
-const themeGeneratorWebpackPlugin = require("../../lib/index");
+
+function recursiveIssuer(m) {
+    if (m.issuer) {
+        return recursiveIssuer(m.issuer);
+    } else if (m.name) {
+        return m.name;
+    } else {
+        return false;
+    }
+}
 
 module.exports = {
-    configureWebpack: {
-        plugins: [
-            // themeGeneratorWebpackPlugin
-            new themeGeneratorWebpackPlugin({
-                themes: [
-                    {
-                        // theme name [string]
-                        themeName: "theme-black",
-                        // this theme includes files[Array<string>]
-                        themeFiles: [
-                            path.resolve("./src/css/themes/black/app.scss"),
-                            path.resolve("./src/css/themes/black/element.scss")
-                        ]
+    /*   entry: {
+        foo: path.resolve(__dirname, "src/foo"),
+        bar: path.resolve(__dirname, "src/bar")
+    },
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                themeBlack: {
+                    name: "theme-black",
+                    test: (m, c, entry = "theme-black") =>
+                        m.constructor.name === "CssModule" &&
+                        recursiveIssuer(m) === entry,
+                    chunks: "all",
+                    enforce: true
+                },
+                themeOrange: {
+                    name: "theme-orange",
+                    test: (m, c, entry = "theme-orange") =>
+                        m.constructor.name === "CssModule" &&
+                        recursiveIssuer(m) === entry,
+                    chunks: "all",
+                    enforce: true
+                }
+            }
+        }
+    }, */
+    configureWebpack: config => {
+        //console.log("config option::", config);
+
+        const entry = {
+            themeBlack: path.resolve(__dirname, "src/theme-black"),
+            themeOrange: path.resolve(__dirname, "src/theme-orange")
+        };
+
+        const optimization = {
+            splitChunks: {
+                cacheGroups: {
+                    themeBlack: {
+                        name: "theme-black",
+                        test: (m, c, entry = "theme-black") =>
+                            m.constructor.name === "CssModule" &&
+                            recursiveIssuer(m) === entry,
+                        chunks: "all",
+                        enforce: true
+                    },
+                    themeOrange: {
+                        name: "theme-orange",
+                        test: (m, c, entry = "theme-orange") =>
+                            m.constructor.name === "CssModule" &&
+                            recursiveIssuer(m) === entry,
+                        chunks: "all",
+                        enforce: true
                     }
-                    /*  {
-                        themeName: "theme-blue",
-                        themeFiles: [
-                            path.resolve("./src/css/themes/blue/app.scss"),
-                            path.resolve("./src/css/themes/blue/element.scss")
-                        ]
-                    },
-                    {
-                        themeName: "theme-orange",
-                        themeFiles: [
-                            path.resolve("./src/css/themes/orange/app.scss"),
-                            path.resolve("./src/css/themes/orange/element.scss")
-                        ]
-                    },
-                    {
-                        themeName: "theme-red",
-                        themeFiles: [
-                            path.resolve("./src/css/themes/red/app.scss"),
-                            path.resolve("./src/css/themes/red/element.scss")
-                        ]
-                    } */
-                ],
-                // default theme [string]。it will create link tag in your html file.
-                defaultTheme: "theme-black",
-                // themes output folder name [string].Will be created in the public directory
-                outputFolderName: "themes",
-                // those html file will effect [Array<string>]
-                htmlFileNames: ["index.html"],
-                // html link id  [string]。default link id is "theme_creator_cli_style_id"
-                htmlLinkId: "theme-generator-webpack-plugin_style_id"
-            })
-        ]
+                }
+            }
+        };
+
+        Object.assign(config, {
+            entry,
+            optimization
+        });
     },
     /*
      * When set to true, eslint-loader will only emit warnings during webpack's compilation process in order not to break the flow during development.

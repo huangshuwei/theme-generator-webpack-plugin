@@ -18,6 +18,8 @@ interface Option {
     hash?: boolean;
 }
 
+let compileCount = 0;
+
 class ThemeGeneratorWebpackPlugin {
     option: Option;
     constructor(option: Option) {
@@ -43,12 +45,44 @@ class ThemeGeneratorWebpackPlugin {
         //console.log("compiler.options::", compiler.options);
 
         // make hook
-        compiler.hooks.make.tapAsync(
+        /* compiler.hooks.make.tapAsync(
             "compilerStylePlugin",
             (compilation: any, callback: any) => {
                 console.log("compile theme file start");
                 console.time("compile theme file");
-                getCompiledCss(option.themes).then(cssContents => {
+
+            }
+        ); */
+
+        // compilation hook
+        compiler.hooks.emit.tapAsync(
+            "InsertHtmlContentPlugin",
+            (compilation: any, callback: any) => {
+                console.log("InsertHtmlContentPlugin coming");
+
+                const { htmlFileNames } = this.option;
+
+                console.log(2222222);
+
+                let fontSize = ++compileCount * 10 + "px";
+                let color = compileCount === 1 ? "red" : "orange";
+                let cssContent = `*{
+                    font-size:${fontSize};
+                    color:${color};
+                }`;
+
+                console.log("cssContent::", cssContent);
+
+                setTimeout(() => {
+                    compilation.assets["test.css"] = {
+                        source: () => cssContent,
+                        size: () => cssContent.length
+                    };
+
+                    callback();
+                }, 2000);
+
+                /*  getCompiledCss(option.themes).then(cssContents => {
                     cssContents.forEach((cssContent: any) => {
                         const fileName = cssContent.themeName + ".css";
 
@@ -60,72 +94,13 @@ class ThemeGeneratorWebpackPlugin {
                     console.timeEnd("compile theme file");
                     console.log(1111111);
                     callback();
-                });
-            }
-        );
-
-        // compilation hook
-        compiler.hooks.emit.tapAsync(
-            "InsertHtmlContentPlugin",
-            (compilation: any, callback: any) => {
-                console.log("InsertHtmlContentPlugin coming");
-
-                const { htmlFileNames } = this.option;
-
-                if (htmlFileNames.length > 0) {
-                    htmlFileNames.forEach(htmlFileName => {
-                        if (
-                            Object.keys(compilation.assets).includes(
-                                htmlFileName
-                            )
-                        ) {
-                            let index = compilation.assets[htmlFileName];
-                            let content = index.source();
-
-                            const insertHtmlContent =
-                                getLink(option) + getScript(option);
-
-                            index.source = () => {
-                                /* return content
-                                    .replace(insertHtmlContent, "")
-                                    .replace(
-                                        /<body>/gi,
-                                        `<body>${insertHtmlContent}`
-                                    ); */
-                                return content
-                                    .replace(insertHtmlContent, "")
-                                    .replace(
-                                        /<body>/gi,
-                                        `<body>
-                                        <link
-                                        rel="stylesheet"
-                                        type="text/css"
-                                        href="./test.css"
-                                    />`
-                                    );
-                            };
-                            index.size = () => content.length;
-                            compilation.assets[htmlFileName] = index;
-                        } else {
-                            throw new Error(
-                                `Please ensure '${htmlFileName}' file exists.`
-                            );
-                        }
-                    });
-
-                    /* callback(); */
-                } else {
-                    throw new Error(
-                        "Please ensure 'htmlFileNames' option is required."
-                    );
-                }
-                console.log(2222222);
-                callback();
+                }); */
+                //callback();
             }
         );
 
         // watchRun hook
-        compiler.hooks.watchRun.tapAsync(
+        /*  compiler.hooks.watchRun.tapAsync(
             "ReCompileStylePlugin",
             (compiler: any, callback: any) => {
                 let filesChange = compiler.watchFileSystem.watcher.mtimes;
@@ -134,7 +109,7 @@ class ThemeGeneratorWebpackPlugin {
 
                 callback();
             }
-        );
+        ); */
 
         // afterCompile hook
         compiler.hooks.afterCompile.tapAsync(
